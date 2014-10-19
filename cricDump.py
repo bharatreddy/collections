@@ -31,7 +31,7 @@ for i in iplFiles:
     print matchDict['info']['competition']
     print "--------------info-competition--------------"
     print "--------------info-teams--------------"
-    print matchDict['info']['teams']
+    print matchDict['info']['teams'][0], matchDict['info']['teams'][1]
     print "--------------info-teams--------------"
     print "--------------info-umpires--------------"
     print matchDict['info']['umpires']
