@@ -16,10 +16,10 @@ class DbUtils(object):
         self.cursor = self.conn.cursor()
 
     def create_main_tables(self):
-        # create the match table
+        # create the Match table
         mtchStr = """
                     CREATE TABLE Match (
-                        ID INT PRIMARY KEY NOT NULL,
+                        Id INT PRIMARY KEY NOT NULL,
                         Date DATE NOT NULL,
                         Type VARCHAR(50) NOT NULL,
                         Venue VARCHAR(50) NOT NULL,
@@ -28,5 +28,55 @@ class DbUtils(object):
                         )
                     """
         self.cursor.execute(mtchStr)
-
+        # create the Toss table
+        tossStr = """
+                    CREATE TABLE Toss (
+                        MatchId INT ,
+                        Winner VARCHAR(100) NOT NULL,
+                        Decision VARCHAR(50) NOT NULL,
+                        FOREIGN KEY (MatchId) REFERENCES Match(Id)
+                        )
+                    """
+        self.cursor.execute(tossStr)
+        # create the Teams table
+        teamsStr = """
+                    CREATE TABLE Teams (
+                        MatchId INT ,
+                        Team1 VARCHAR(100) NOT NULL,
+                        Team2 VARCHAR(100) NOT NULL,
+                        FOREIGN KEY (MatchId) REFERENCES Match(Id)
+                        )
+                    """
+        self.cursor.execute(teamsStr)
+        # create the Umpires table
+        umpiresStr = """
+                    CREATE TABLE Umpires (
+                        MatchId INT ,
+                        Umpire1 VARCHAR(100) NOT NULL,
+                        Umpire2 VARCHAR(100) NOT NULL,
+                        FOREIGN KEY (MatchId) REFERENCES Match(Id)
+                        )
+                    """
+        self.cursor.execute(umpiresStr)
+        # create the PlayerOfMatch table
+        playerOfMatchStr = """
+                    CREATE TABLE PlayerOfMatch (
+                        MatchId INT ,
+                        Player VARCHAR(100) NOT NULL,
+                        FOREIGN KEY (MatchId) REFERENCES Match(Id)
+                        )
+                    """
+        self.cursor.execute(playerOfMatchStr)
+        # create the Outcome table
+        outComeStr = """
+                    CREATE TABLE Outcome (
+                        MatchId INT ,
+                        Winner VARCHAR(100) NOT NULL,
+                        Innings INT NULL,
+                        Runs INT NULL,
+                        Wickets INT NULL,
+                        FOREIGN KEY (MatchId) REFERENCES Match(Id)
+                        )
+                    """
+        self.cursor.execute(playerOfMoutComeStratchStr)
         self.conn.commit()
