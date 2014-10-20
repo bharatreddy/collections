@@ -85,21 +85,41 @@ class CrData(object):
             # Outcome tbl data
             outDict = {}
             mOut = matchDict['info']['outcome']
-            outDict['winner'] = mOut['winner']
-            mOutBy = mOut['by'].keys()
-            if type(mOutBy) == list:
-                mOutBy = mOutBy[0]
-            if mOutBy.lower() == 'innings':
-                outDict['Innings'] = mOut['by']['innings']
+            if 'winner' in mOut:
+                outDict['winner'] = mOut['winner']
+            else:
+                outDict['winner'] = None
+            if 'result'in mOut:
+                outDict['result'] = mOut['result']
+            else:
+                outDict['result'] = mOut['result']
+            if 'eliminator' in mOut:
+                outDict['eliminator'] = mOut['eliminator']
+            else:
+                outDict['eliminator'] = None
+            if 'method' in mOut:
+                outDict['method'] = mOut['method']
+            else:
+                outDict['method'] = None
+            if 'by' in mOut:
+                mOutBy = mOut['by'].keys()
+                if type(mOutBy) == list:
+                    mOutBy = mOutBy[0]
+                if mOutBy.lower() == 'innings':
+                    outDict['Innings'] = mOut['by']['innings']
+                else:
+                    outDict['Innings'] = None
+                if mOutBy.lower() == 'runs':
+                    outDict['Runs'] = mOut['by']['runs']
+                else:
+                    outDict['Runs'] = None
+                if mOutBy.lower() == 'wickets':
+                    outDict['Wickets'] = mOut['by']['wickets']
+                else:
+                    outDict['Wickets'] = None
             else:
                 outDict['Innings'] = None
-            if mOutBy.lower() == 'runs':
-                outDict['Runs'] = mOut['by']['runs']
-            else:
                 outDict['Runs'] = None
-            if mOutBy.lower() == 'wickets':
-                outDict['Wickets'] = mOut['by']['wickets']
-            else:
                 outDict['Wickets'] = None
             self.popOutcomeTab( Id, outDict)
 
@@ -132,20 +152,26 @@ class CrData(object):
         Populate the Outcome table
         """
         query = ("INSERT INTO Outcome "
-               " (MatchId, Winner, Innings, Runs, Wickets) "
+               " (MatchId, Winner, Innings, Runs, Wickets, Result, Eliminator, Method) "
                " VALUES (%s, %s, %s, %s, %s) "
                " ON DUPLICATE KEY UPDATE "
                "   MatchId=VALUES(MatchId), "
                "   Winner=VALUES(Winner), "
                "   Innings=VALUES(Innings), "
                "   Runs=VALUES(Runs), "
-               "   Wickets=VALUES(Wickets) ")
+               "   Wickets=VALUES(Wickets), "
+               "   Result=VALUES(Result), "
+               "   Eliminator=VALUES(Eliminator), "
+               "   Method=VALUES(Method)")
         params = (
             Id, 
             outDict['winner'],
             outDict['Innings'], 
             outDict["Runs"], 
-            outDict["Wickets"])
+            outDict["Wickets"],
+            outDict["Result"],
+            outDict["Eliminator"],
+            outDict["Method"])
         self.cursor.execute(query, params)
         self.conn.commit()
 

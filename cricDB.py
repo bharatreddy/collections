@@ -74,10 +74,13 @@ class DbUtils(object):
         outComeStr = """
                     CREATE TABLE Outcome(
                         MatchId INT NOT NULL,
-                        Winner VARCHAR(100) NOT NULL,
+                        Winner VARCHAR(100) NULL,
                         Innings INT NULL,
                         Runs INT NULL,
                         Wickets INT NULL,
+                        Result VARCHAR(50) NULL,
+                        Eliminator VARCHAR(100) NULL,
+                        Method VARCHAR(50) NULL,
                         FOREIGN KEY (MatchId) REFERENCES Game(Id)
                         )
                     """
