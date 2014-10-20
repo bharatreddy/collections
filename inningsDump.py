@@ -48,12 +48,147 @@ class InnData(object):
         # Loop throught the files and parse them.
         loopCntr = 1 # just a counter to keep track of num files looped
         for i,j in zip(cricFiles,fnList):
-            print "curr File->", j, loopCntr
+            print "curr Match->", j, loopCntr
             loopCntr += 1
             stream = open(i, 'r')
             matchDict = yaml.load(stream)
-            print len(matchDict['innings'])
-            print matchDict['innings'][1].keys()
-            print matchDict['innings'][0]['1st innings']['deliveries'][10]
-            # print matchDict['innings'][0]['2nd innings']['deliveries'], matchDict['innings'][0]['2nd innings']['team']
-            break
+            # get the file number and convert it to int
+            Id = int(j[:-5])
+            # Loop through innings
+            for inn in matchDict['innings']:
+                innKey = inn.keys()
+                for ik in innKey:
+                    if 'team' in inn[ik]:
+                        innNum = int(ik[0])
+                        teamName = inn[ik]['team']
+                        # self.popInningsTab( Id, innNum, teamName )
+                    if 'deliveries' in inn[ik]:
+                        for dlvrs in inn[ik]['deliveries']:
+                            for dk in dlvrs.keys():
+                                delvrsDict = {}
+                                overNum = float(dk)
+                                delvrsDict['Over'] = overNum
+                                delvrsDict['InnNum'] = innNum
+                                if 'batsman' in dlvrs[dk]:
+                                    delvrsDict['Batsman'] = dlvrs[dk]['batsman']
+                                else:
+                                    delvrsDict['Batsman'] = None
+                                if 'bowler' in dlvrs[dk]:
+                                    delvrsDict['Bowler'] = dlvrs[dk]['bowler']
+                                else:
+                                    delvrsDict['Bowler'] = None
+                                if 'non_striker' in dlvrs[dk]:
+                                    delvrsDict['NonStriker'] = dlvrs[dk]['non_striker']
+                                else:
+                                    delvrsDict['NonStriker'] = None
+                                if 'runs' in dlvrs[dk]:
+                                    if 'batsman' in dlvrs[dk]['runs']:
+                                        delvrsDict['BatsmanRuns'] = dlvrs[dk]['runs']['batsman']
+                                    else:
+                                        delvrsDict['BatsmanRuns'] = None
+                                    if 'extras' in dlvrs[dk]['runs']:
+                                        delvrsDict['ExtraRuns'] = dlvrs[dk]['runs']['extras']
+                                    else:
+                                        delvrsDict['ExtraRuns'] = None
+                                    if 'non_boundary' in dlvrs[dk]['runs']:
+                                        delvrsDict['NonBoundary'] = dlvrs[dk]['runs']['non_boundary']
+                                    else:
+                                        delvrsDict['NonBoundary'] = None
+                                else:
+                                    delvrsDict['BatsmanRuns'] = None
+                                    delvrsDict['ExtraRuns'] = None
+                                    delvrsDict['NonBoundary'] = None
+                                if 'supersub' in dlvrs[dk]:
+                                    delvrsDict['Substitution'] = str(dlvrs[dk]['supersub'])
+                                else:
+                                    delvrsDict['Substitution'] = None
+                                # Not sure what thekey was
+                                if 'super_sub' in dlvrs[dk]:
+                                    delvrsDict['Substitution'] = str(dlvrs[dk]['super_sub'])
+                                else:
+                                    delvrsDict['Substitution'] = None
+                                if 'wicket' in dlvrs[dk]:
+                                    delvrsDict['Wicket'] = "True"
+                                    if "fielders" in dlvrs[dk]['wicket']:
+                                        delvrsDict['WicketFielder'] = delvrsDict['Wicket']['fielders'][0]
+                                    else:
+                                        delvrsDict['WicketFielder'] = None
+                                    if "kind" in dlvrs[dk]['wicket']:
+                                        delvrsDict['WicketKind'] = delvrsDict['Wicket']['kind']
+                                    else:
+                                        delvrsDict['WicketKind'] = None
+                                    if "player_out" in dlvrs[dk]['wicket']:
+                                        delvrsDict['WicketPlayerOut'] = delvrsDict['Wicket']['player_out']
+                                    else:
+                                        delvrsDict['WicketPlayerOut'] = None
+                                else:
+                                    delvrsDict['WicketFielder'] = None
+                                    delvrsDict['WicketKind'] = None
+                                    delvrsDict['WicketPlayerOut'] = None
+                                if 'extras' in dlvrs[dk]:
+                                    delvrsDict['Extra'] = dlvrs[dk]['extras']
+                                else:
+                                    delvrsDict['Extra'] = None
+                                self.popDeliveriesTab( Id, delvrsDict )
+
+    def popDeliveriesTab(self, Id, delvrsDict):
+        """
+        Populate the Delivieries table
+        """
+        query = ("INSERT INTO Deliveries "
+               " (MatchId, InnNum, Over, Batsman, NonStriker, Bowler, BatsmanRuns, ExtraRuns,"
+               " NonBoundary, Substitution, Wicket, WicketFielder, WicketKind, WicketPlayerOut, Extra) "
+               " VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) "
+               " ON DUPLICATE KEY UPDATE "
+               "   MatchId=VALUES(MatchId), "
+               "   InnNum=VALUES(InnNum), "
+               "   Over=VALUES(Over), "
+               "   Batsman=VALUES(Batsman), "
+               "   NonStriker=VALUES(NonStriker), "
+               "   Bowler=VALUES(Bowler), "
+               "   BatsmanRuns=VALUES(BatsmanRuns), "
+               "   ExtraRuns=VALUES(ExtraRuns), "
+               "   NonBoundary=VALUES(NonBoundary), "
+               "   Substitution=VALUES(Substitution), "
+               "   Wicket=VALUES(Wicket), "
+               "   WicketFielder=VALUES(WicketFielder), "
+               "   WicketKind=VALUES(WicketKind), "
+               "   WicketPlayerOut=VALUES(WicketPlayerOut), "
+               "   Extra=VALUES(Extra) ")
+        params = (
+            Id,
+            delvrsDict['innNum'],
+            delvrsDict['Over'], 
+            delvrsDict['Batsman'], 
+            delvrsDict['NonStriker'], 
+            delvrsDict['Bowler'], 
+            delvrsDict['BatsmanRuns'], 
+            delvrsDict['ExtraRuns'], 
+            delvrsDict['NonBoundary'], 
+            delvrsDict['Substitution'], 
+            delvrsDict['Wicket'], 
+            delvrsDict['WicketFielder'], 
+            delvrsDict['WicketKind'], 
+            delvrsDict['WicketPlayerOut'], 
+            delvrsDict['Extra'])
+        self.cursor.execute(query, params)
+        self.conn.commit()
+
+
+    def popInningsTab(self, Id, teamName):
+        """
+        Populate the Innings table
+        """
+        query = ("INSERT INTO Innings "
+               " (MatchId, InningsNum, Team) "
+               " VALUES (%s, %s, %s) "
+               " ON DUPLICATE KEY UPDATE "
+               "   MatchId=VALUES(MatchId), "
+               "   InningsNum=VALUES(InningsNum), "
+               "   Team=VALUES(Team) ")
+        params = (
+            Id,
+            innNum, 
+            teamName)
+        self.cursor.execute(query, params)
+        self.conn.commit()
