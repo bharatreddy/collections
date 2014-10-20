@@ -100,7 +100,7 @@ class DbUtils(object):
                         )
                     """
         self.cursor.execute(innStr)
-        # create the Deliveries table
+        # create the Deliveries table 
         delStr = """
                     CREATE TABLE Deliveries(
                         MatchId INT NOT NULL,

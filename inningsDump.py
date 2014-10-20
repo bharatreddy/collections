@@ -59,9 +59,12 @@ class InnData(object):
                 innKey = inn.keys()
                 for ik in innKey:
                     if 'team' in inn[ik]:
-                        innNum = int(ik[0])
+                        if 'Super Over' not in ik:
+                            innNum = int(ik[0])
+                        else:
+                            innNum = 0
                         teamName = inn[ik]['team']
-                        # self.popInningsTab( Id, innNum, teamName )
+                        self.popInningsTab( Id, innNum, teamName )
                     if 'deliveries' in inn[ik]:
                         for dlvrs in inn[ik]['deliveries']:
                             for dk in dlvrs.keys():
@@ -110,23 +113,24 @@ class InnData(object):
                                 if 'wicket' in dlvrs[dk]:
                                     delvrsDict['Wicket'] = "True"
                                     if "fielders" in dlvrs[dk]['wicket']:
-                                        delvrsDict['WicketFielder'] = delvrsDict['Wicket']['fielders'][0]
+                                        delvrsDict['WicketFielder'] = dlvrs[dk]['wicket']['fielders'][0]
                                     else:
                                         delvrsDict['WicketFielder'] = None
                                     if "kind" in dlvrs[dk]['wicket']:
-                                        delvrsDict['WicketKind'] = delvrsDict['Wicket']['kind']
+                                        delvrsDict['WicketKind'] = dlvrs[dk]['wicket']['kind']
                                     else:
                                         delvrsDict['WicketKind'] = None
                                     if "player_out" in dlvrs[dk]['wicket']:
-                                        delvrsDict['WicketPlayerOut'] = delvrsDict['Wicket']['player_out']
+                                        delvrsDict['WicketPlayerOut'] = dlvrs[dk]['wicket']['player_out']
                                     else:
                                         delvrsDict['WicketPlayerOut'] = None
                                 else:
+                                    delvrsDict['Wicket'] = None
                                     delvrsDict['WicketFielder'] = None
                                     delvrsDict['WicketKind'] = None
                                     delvrsDict['WicketPlayerOut'] = None
                                 if 'extras' in dlvrs[dk]:
-                                    delvrsDict['Extra'] = dlvrs[dk]['extras']
+                                    delvrsDict['Extra'] = dlvrs[dk]['extras'].keys()[0]
                                 else:
                                     delvrsDict['Extra'] = None
                                 self.popDeliveriesTab( Id, delvrsDict )
@@ -157,7 +161,7 @@ class InnData(object):
                "   Extra=VALUES(Extra) ")
         params = (
             Id,
-            delvrsDict['innNum'],
+            delvrsDict['InnNum'],
             delvrsDict['Over'], 
             delvrsDict['Batsman'], 
             delvrsDict['NonStriker'], 
@@ -175,7 +179,7 @@ class InnData(object):
         self.conn.commit()
 
 
-    def popInningsTab(self, Id, teamName):
+    def popInningsTab( self, Id, innNum, teamName ):
         """
         Populate the Innings table
         """
