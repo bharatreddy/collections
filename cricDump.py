@@ -60,7 +60,10 @@ class CrData(object):
                 mainDict['city'] = matchDict['info']['city']
             else:
                 mainDict['city'] = None
-            mainDict['mDate'] = matchDict['info']['dates']
+            if type(matchDict['info']['dates']) == list:
+                mainDict['mDate'] = matchDict['info']['dates'][0]
+            else:
+                mainDict['mDate'] = matchDict['info']['dates']
             mainDict['mType'] = matchDict['info']['match_type']
             mainDict['mVenue'] = matchDict['info']['venue']
             mainDict['mComptn'] = matchDict['info']['competition']

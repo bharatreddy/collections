@@ -1,7 +1,8 @@
 if __name__ == "__main__":
     import cricDB
     dbo = cricDB.DbUtils()
-    dbo.create_main_tables()
+    # dbo.create_main_tables()
+    dbo.create_innings_tables()
     dbo.close()
 
 class DbUtils(object):
@@ -85,6 +86,42 @@ class DbUtils(object):
                         )
                     """
         self.cursor.execute(outComeStr)
+        self.conn.commit()
+
+    def create_innings_tables(self):
+        import mysql.connector
+        # create the Innings table
+        innStr = """
+                    CREATE TABLE Innings(
+                        MatchId INT NOT NULL,
+                        InningsNum INT NOT NULL,
+                        Team VARCHAR(50) NOT NULL,
+                        FOREIGN KEY (MatchId) REFERENCES Game(Id)
+                        )
+                    """
+        self.cursor.execute(innStr)
+        # create the Deliveries table
+        delStr = """
+                    CREATE TABLE Deliveries(
+                        MatchId INT NOT NULL,
+                        InnNum INT NOT NULL,
+                        Over FLOAT NULL,
+                        Batsman VARCHAR(100) NULL,
+                        NonStriker VARCHAR(100) NULL,
+                        Bowler VARCHAR(100) NULL,
+                        BatsmanRuns INT NULL,
+                        ExtraRuns INT NULL,
+                        NonBoundary INT NULL,
+                        Substitution VARCHAR(200) NULL,
+                        Wicket VARCHAR(10) NULL,
+                        WicketFielder VARCHAR(100) NULL,
+                        WicketKind VARCHAR(100) NULL,
+                        WicketPlayerOut VARCHAR(100) NULL,
+                        Extra VARCHAR(100) NULL,
+                        FOREIGN KEY (MatchId) REFERENCES Game(Id)
+                        )
+                    """
+        self.cursor.execute(delStr)
         self.conn.commit()
 
     def close(self):
