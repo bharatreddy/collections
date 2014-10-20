@@ -24,8 +24,8 @@ class DbUtils(object):
                         Id INT NOT NULL,
                         MatchDate DATETIME NOT NULL,
                         Type VARCHAR(50) NOT NULL,
-                        Venue VARCHAR(50) NOT NULL,
-                        Competition VARCHAR(50),
+                        Venue VARCHAR(100) NULL,
+                        Competition VARCHAR(100),
                         Overs FLOAT,
                         PRIMARY KEY (Id)
                         )
@@ -65,7 +65,7 @@ class DbUtils(object):
         playerOfMatchStr = """
                     CREATE TABLE PlayerOfMatch(
                         MatchId INT NOT NULL,
-                        Player VARCHAR(100) NOT NULL,
+                        Player VARCHAR(100) NULL,
                         FOREIGN KEY (MatchId) REFERENCES Game(Id)
                         )
                     """

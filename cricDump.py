@@ -46,15 +46,20 @@ class CrData(object):
             if os.path.isfile(os.path.join(allDir,f)) and 'yaml' in f ]
             cricFiles += allFiles
         # Loop throught the files and parse them.
+        loopCntr = 1 # just a counter to keep track of num files looped
         for i,j in zip(cricFiles,fnList):
-            print "curr File->", j
+            print "curr File->", j, loopCntr
+            loopCntr += 1
             stream = open(i, 'r')
             matchDict = yaml.load(stream)
             # Main tbl data
             mainDict = {}
             # get the file number and convert it to int
             Id = int(j[:-5])
-            mainDict['city'] = matchDict['info']['city']
+            if 'city' in mainDict:
+                mainDict['city'] = matchDict['info']['city']
+            else:
+                mainDict['city'] = None
             mainDict['mDate'] = matchDict['info']['dates']
             mainDict['mType'] = matchDict['info']['match_type']
             mainDict['mVenue'] = matchDict['info']['venue']
@@ -80,7 +85,10 @@ class CrData(object):
             umpireDict['Umpire2'] = mUmpire[1]
             self.popUmpiresTab( Id, umpireDict )
             # player of Match tbl data
-            mPoM = matchDict['info']['player_of_match']
+            if 'player_of_match' in matchDict['info']:
+                mPoM = matchDict['info']['player_of_match']
+            else:
+                mPoM = [None]
             self.popPlayerOfMatchTab( Id, mPoM )
             # Outcome tbl data
             outDict = {}
@@ -92,7 +100,7 @@ class CrData(object):
             if 'result'in mOut:
                 outDict['result'] = mOut['result']
             else:
-                outDict['result'] = mOut['result']
+                outDict['result'] = None
             if 'eliminator' in mOut:
                 outDict['eliminator'] = mOut['eliminator']
             else:
@@ -153,7 +161,7 @@ class CrData(object):
         """
         query = ("INSERT INTO Outcome "
                " (MatchId, Winner, Innings, Runs, Wickets, Result, Eliminator, Method) "
-               " VALUES (%s, %s, %s, %s, %s) "
+               " VALUES (%s, %s, %s, %s, %s, %s, %s, %s) "
                " ON DUPLICATE KEY UPDATE "
                "   MatchId=VALUES(MatchId), "
                "   Winner=VALUES(Winner), "
@@ -169,9 +177,9 @@ class CrData(object):
             outDict['Innings'], 
             outDict["Runs"], 
             outDict["Wickets"],
-            outDict["Result"],
-            outDict["Eliminator"],
-            outDict["Method"])
+            outDict["result"],
+            outDict["eliminator"],
+            outDict["method"])
         self.cursor.execute(query, params)
         self.conn.commit()
 
