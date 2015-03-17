@@ -13,7 +13,7 @@ class TicTacToe(object):
             Also we'll use 'X', 'O' to represent the players
             empty slots will be represented using #.
         """
-        self.board = ''.join( [ '#' for i in range(9) ] )
+        self.board = [ '#' for i in range(9) ]#''.join( [ '#' for i in range(9) ] )
 
     def check_winner(self):
         """
@@ -73,7 +73,7 @@ class TicTacToe(object):
             return (0,4)
         # set the next player
         if currPlayer == 'X':
-            nextPlayer = '0'
+            nextPlayer = 'O'
         else:
             nextPlayer = 'X'
         # check for a winner in the current step
@@ -90,7 +90,7 @@ class TicTacToe(object):
         # store the location of empty spots in the board
         emptySpots = []
         for ix,brd in enumerate( self.board ):
-            if brd == '-':
+            if brd == '#':
                 emptySpots.append( ix )
         # Now here is the main minimax part.
         for es in emptySpots:
