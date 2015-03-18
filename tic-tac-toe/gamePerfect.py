@@ -43,6 +43,34 @@ class TicTacToe(object):
             return  True
         return False
 
+    def get_winner(self):
+        """
+            Function to check and see who won the game.
+        """
+        if not self.check_winner():
+            print "No Winner found"
+            return None
+        for i in range(3):
+            if ( (self.board[i*3] == self.board[i*3+1]) and \
+                (self.board[i*3] ==  self.board[i*3+2]) and \
+                self.board[i*3] != '#' ):
+                return self.board[i*3]
+        # Check the columns for winners.
+        for i in range(3):
+           if ( (self.board[i] == self.board[i+3]) and \
+                (self.board[i] ==  self.board[i+6]) and \
+                self.board[i] != '#' ):
+                return self.board[i]
+        # Check the diagonal elements
+        # There are two possibilities elements 0, 4 and 8 or 2, 4 and 6.
+        if ( self.board[0] == self.board[4] and \
+            self.board[4] == self.board[8] and self.board[4] != '#' ):
+            return  self.board[4]
+        if ( self.board[2] == self.board[4] and \
+            self.board[4] == self.board[6] and self.board[4] != '#' ):
+            return  self.board[4]
+        return None
+
     def check_draw(self):
         """
             Function to check if the game ended in a draw.
