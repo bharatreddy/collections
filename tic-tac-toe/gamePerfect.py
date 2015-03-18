@@ -25,7 +25,7 @@ class TicTacToe(object):
         for i in range(3):
             if ( (self.board[i*3] == self.board[i*3+1]) and \
                 (self.board[i*3] ==  self.board[i*3+2]) and \
-                self.board[i] != '#' ):
+                self.board[i*3] != '#' ): 
                 return True
         # Check the columns for winners.
         for i in range(3):

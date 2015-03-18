@@ -4,7 +4,7 @@ gmObj = gamePerfect.TicTacToe()
 # We are assuming 'X' is the computer
 # and 'O' is the user.
 # Loop until someone wins the game
-start = input('Do you want to start (Y/N) : ')
+start = raw_input('Do you want to start (Y/N) : ')
 if start.upper() == 'Y':
     currUser = 'O'
 else:
@@ -17,4 +17,6 @@ while not gmObj.check_winner():
     else:
         step = gmObj.get_next_move('X')
         gmObj.board[step[1]] =  currUser
-        currUser = 'X'
+        currUser = 'O'
+    print gmObj.board
+# print 'sdfsdfs', gmObj.check_winner(), gmObj.board
