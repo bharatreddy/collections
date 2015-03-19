@@ -70,7 +70,7 @@ $('#o_win').text(o_win)
   }
 
    });
-    $("#reset").click(function () {
+    $("#new-game").click(function () {
     $("#game li").text("+");
 	$("#game li").removeClass('disable')
 	$("#game li").removeClass('o')
