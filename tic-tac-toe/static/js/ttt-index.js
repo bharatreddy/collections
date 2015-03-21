@@ -1,20 +1,12 @@
-/*
-Ryan Juve -  July 2013
-Bootstrap-tac-toe
-This javascript/jQuery builds, runs, and provides a computer player for
-a simple tic tac toe game for the bootstrap framework 
-*/
-
-// initialize global variables
 var gridArray = [[0,0,0],[0,0,0],[0,0,0]];
 var highPriWin = [[0,"O","O"],["O",0,"O"],["O","O",0]];
 var highPriBlock = [[0,"X","X"],["X",0,"X"],["X","X",0]];
 var gameState = 0;
 var gameAttempts = 0;
 
-var xImg = "imgs/cross.png";
-var oImg = "imgs/circle-tick.png";
-var blankImg = "imgs/blank.png";
+var xImg = "imgs/cross-sm.png";
+var oImg = "imgs/circle-tick-sm.png";
+var blankImg = "imgs/cross-sm.png";
 
 //compares two arrays, returns true if they match
 function compare(a,b) {
