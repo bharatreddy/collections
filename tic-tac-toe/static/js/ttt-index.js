@@ -206,18 +206,18 @@ function createGame() {
 			rowDiv.appendChild(gridDiv);
 		}
 		
-		document.getElementById("playarea").appendChild(rowDiv);
+		document.getElementById("gamezone").appendChild(rowDiv);
 		if (i<2) {
-			$("<br>").appendTo(document.getElementById("playarea"));
+			$("<br>").appendTo(document.getElementById("gamezone"));
 		}
 	}
 }
 
-//resets gridArray and gameState, clears playarea, and calls createGame
+//resets gridArray and gameState, clears gamezone, and calls createGame
 function resetGame(){
 	gridArray = [[0,0,0],[0,0,0],[0,0,0]];
 	gameState = 0;
-	document.getElementById("playarea").innerHTML = '';
+	document.getElementById("gamezone").innerHTML = '';
 	createGame();
 }
 
