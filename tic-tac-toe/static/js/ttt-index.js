@@ -6,7 +6,7 @@ var gameAttempts = 0;
 
 var xImg = "imgs/cross-sm.png";
 var oImg = "imgs/circle-tick-sm.png";
-var blankImg = "imgs/cross-sm.png";
+var blankImg = "imgs/blank-dark.png";
 
 //compares two arrays, returns true if they match
 function compare(a,b) {

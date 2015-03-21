@@ -5,7 +5,7 @@
     box-shadow: 0px 5px 5px gray;
 }
 #reset {
-    margin: auto auto;
+    margin: auto;
 }
 .blank {
     background: transparent;
@@ -15,7 +15,7 @@
   outline: 5px outset gray;
 }
 .modal-dialog{
-    padding-top: 150px;
+    padding-top: 10px;
 }
 
 .navbar {
@@ -51,12 +51,7 @@
 }
 
 .img-responsive .carousel {
-    position: relative;
-    float: left;
-    max-width:  100px;
-    background-position: 50% 50%;
-    background-repeat:   no-repeat;
-    background-size:     cover;
+    height:200px;
 }
 
 .postbox {
@@ -79,8 +74,8 @@ html{
 }
 
 body{
-    padding-top: 70px;
-    padding-bottom: 40px;
+    padding-top: 10px;
+    padding-bottom: 10px;
     color: white;
     background: DimGray; /* Old browsers */
     background: -moz-linear-gradient(top,  DimGray 53%, #d6d6d6 100%); /* FF3.6+ */
