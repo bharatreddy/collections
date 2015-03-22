@@ -30,14 +30,29 @@ function getNextMove(){
     // Get the new position from python script
     $(function( data ) {
           $.getJSON("/next_move/"+boardArr.toString(), {}, function(data) {
-              console.log(data.result);
+              placeMnmxLoc(data.result);
           });
     });
 
-
-
-
 }
+
+// Place an 'X' in the location returned by minimax algo
+function placeMnmxLoc(loc) {
+    // check if there is a winner
+    checkWinner();
+    // get the x,y coords from loc
+    var x = Math.floor(loc/3);
+    var y = loc % 3;
+    gameGrid[x][y] = "X";
+    var divName = "square_"+x+"_"+y;
+    console.log(divName);
+    $("#"+divName).children("img").attr('src',xImg);
+    document.getElementById(divName).classList.remove("blank");
+    document.getElementById(divName).classList.add("X");
+    // check if there is a winner
+    checkWinner();
+}
+
 
 function checkWinner() {
     //check for draw

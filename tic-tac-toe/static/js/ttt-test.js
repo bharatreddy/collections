@@ -102,14 +102,14 @@ function getNextMove() {
 	return;	
 }
 
-// places an O in the grid array and changes div class to .O for given index
+// places an O in the grid array and changes div class to .X for given index
 function computerMove(i,j) {
 	gameGrid[i][j] = "O";
 	var divName = "square_"+i+"_"+j;
 	console.log(divName);
 	$("#"+divName).children("img").attr('src',xImg);
 	document.getElementById(divName).classList.remove("blank");
-	document.getElementById(divName).classList.add("O");	
+	document.getElementById(divName).classList.add("X");	
 }
 
 // checks for win condition and displays modal
