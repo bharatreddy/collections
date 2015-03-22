@@ -1,20 +1,33 @@
 from flask import Flask, render_template, request, jsonify
+import json
 app = Flask(__name__)
 
 @app.route("/")
 def starter():
     return render_template('ttt-index.html')
 
-def next_move(board):
+@app.route("/next_move/<board>")
+def next_move(board=["#", "#", "#", "#", "#", "#", "#", "#", "#"]):
     # given the current board retreive the next move.
     # import the library
     import gamePerfect
+    # what we get in the board is a string
+    # convert it into a list as required 
+    # by the python code.
+    board = board.split(",")
+    # Now in our javascript code
+    # the blank spaces are represented
+    # by zero ('0') and in python by '#'
+    # replace the zeros.
+    for i,b in enumerate(board):
+        if b == '0':
+            board[i] = "#"
     gmObj = gamePerfect.TicTacToe()
     # set the board
     gmObj.board = board
     # return computer's step
     step = gmObj.get_next_move('X')
-    return step[1]
+    return jsonify(result=step[1])
 
 if __name__ == "__main__":
     app.debug=True

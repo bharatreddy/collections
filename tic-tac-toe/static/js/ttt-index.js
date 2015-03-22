@@ -27,19 +27,22 @@ function yIndex(squareDiv) {
 function getNextMove(){
     // get the board as array of strings
     var boardArr = gameGrid[0].concat(gameGrid[1],gameGrid[2]);
-    // Convert the zeros (blank spaces) to '#' 
-    // as required by our python function
-    for (var i = 0; i < boardArr.length; i++) {
-        if (boardArr[i] == 0){
-            boardArr[i] = "#"
-        }
-    }
+    // Get the new position from python script
+    $(function( data ) {
+          $.getJSON("/next_move/"+boardArr.toString(), {}, function(data) {
+              console.log(data.result);
+          });
+    });
+
+
+
+
 }
 
 function checkWinner() {
     //check for draw
     var fullGridArr = gameGrid[0].concat(gameGrid[1],gameGrid[2]);
-    console.log(fullGridArr);
+
     if (fullGridArr.indexOf(0) == -1) {
         gameState = 1;
         $('#drawModal').modal('show');
