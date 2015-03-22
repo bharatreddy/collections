@@ -1,7 +1,7 @@
-// Initialize some variables
+// Initialize some Global Variables
 var gameGrid = [[0,0,0],[0,0,0],[0,0,0]];
-var highPriWin = [[0,"O","O"],["O",0,"O"],["O","O",0]];
-var highPriBlock = [[0,"X","X"],["X",0,"X"],["X","X",0]];
+var highPriWin = [[0,"X","X"],["X",0,"X"],["X","X",0]];
+var highPriBlock = [[0,"O","O"],["O",0,"O"],["O","O",0]];
 var gameState = 0;
 var gameAttempts = 0;
 
@@ -9,102 +9,178 @@ var xImg = "static/imgs/cross-sm.png";
 var oImg = "static/imgs/circle-tick-sm.png";
 var blankImg = "static/imgs/blank-dark.png";
 
-//returns the gameGrid X index for given div
+//returns the x Index of the gameGrid 
 function xIndex(squareDiv) {
-	var x = squareDiv.split("_");
-	var i = parseInt(x[1]);
-	return i;
+    var x = squareDiv.split("_");
+    var i = parseInt(x[1]);
+    return i;
 }
 
-//returns the gameGrid Y index for given div
+//returns the Y index of the gameGrid
 function yIndex(squareDiv) {
-	var x = squareDiv.split("_");
-	var i = parseInt(x[2]);
-	return i;
+    var x = squareDiv.split("_");
+    var i = parseInt(x[2]);
+    return i;
+}
+
+// Get the next move using the minimax algo from Python
+function getNextMove(){
+    // get the board as array of strings
+    var boardArr = gameGrid[0].concat(gameGrid[1],gameGrid[2]);
+    // Convert the zeros (blank spaces) to '#' 
+    // as required by our python function
+    for (var i = 0; i < boardArr.length; i++) {
+        if (boardArr[i] == 0){
+            boardArr[i] = "#"
+        }
+    }
+}
+
+function checkWinner() {
+    //check for draw
+    var fullGridArr = gameGrid[0].concat(gameGrid[1],gameGrid[2]);
+    console.log(fullGridArr);
+    if (fullGridArr.indexOf(0) == -1) {
+        gameState = 1;
+        $('#drawModal').modal('show');
+    }
+    //check for win
+    //initialize diag counters 
+    var diag1X = 0;
+    var diag1O = 0;
+    var diag2X = 0;
+    var diag2O = 0;
+    // row and column checks
+    for (var i=0; i<3; i++){
+        //counter initialize
+        var rowX = 0;
+        var rowO = 0;
+        var colX = 0;       
+        var colO = 0;       
+        //check diagonals
+        if (gameGrid[i][i] == "O") {
+            diag1X++;           
+        } else if (gameGrid[i][i] == "X") {
+            diag1O++;
+        }   if (gameGrid[i][(2-i)] == "O") {
+            diag2X++;
+        }   else if (gameGrid[i][(2-i)] == "X") {
+            diag2O++;
+        } if (i == 2) {                 
+            if (diag1X == 3 || diag2X == 3) {
+                gameState = 1;
+                $('#winModal').modal('show');
+            }
+            else if (diag1O == 3 || diag2O == 3) {
+                gameState = 1;
+                $('#loseModal').modal('show');
+            }
+        }
+        // count and check rows and columns for win
+        for (var j=0; j<3; j++) {
+            if (gameGrid[i][j] == "O") {
+                rowX++;             
+            }   else if (gameGrid[i][j] == "X") {
+                rowO++;
+            }   if (gameGrid[j][i] == "O") {
+                colX++;             
+            }   else if (gameGrid[j][i] == "X") {
+                colO++;                     
+            } if (j==2) {                   
+                if (rowX == 3 || colX == 3) {
+                    gameState = 1;
+                    $('#winModal').modal('show');
+                } else if (rowO == 3 || colO == 3) {
+                    gameState = 1;
+                    $('#loseModal').modal('show');
+                }
+            }
+        }   
+    }
 }
 
 //creates 3 rows of 3 divs, names and applies classes
 function createGame() {
-	for (var i=0; i<3; i++) {
-		var rowDiv = document.createElement("div");
-		rowDiv.classList.add("row");
-		
-		for (var j=0; j<3; j++) {
-			var gridDiv = document.createElement("div");
-			gridDiv.id = "square_" + i +"_"+ j;
-			gridDiv.classList.add("col-lg-4");
-			gridDiv.classList.add("col-sm-4");
-			gridDiv.classList.add("col-4");
-			gridDiv.classList.add("blank");
-			$('<img/>').attr('src',blankImg).addClass('img-responsive').appendTo(gridDiv);
-			rowDiv.appendChild(gridDiv);
-		}
-		
-		document.getElementById("gamezone").appendChild(rowDiv);
-		if (i<2) {
-			$("<br>").appendTo(document.getElementById("gamezone"));
-		}
-	}
+    for (var i=0; i<3; i++) {
+        var rowDiv = document.createElement("div");
+        rowDiv.classList.add("row");
+        
+        for (var j=0; j<3; j++) {
+            var gridDiv = document.createElement("div");
+            gridDiv.id = "square_" + i +"_"+ j;
+            gridDiv.classList.add("col-lg-4");
+            gridDiv.classList.add("col-sm-4");
+            gridDiv.classList.add("col-4");
+            gridDiv.classList.add("blank");
+            $('<img/>').attr('src',blankImg).addClass('img-responsive').appendTo(gridDiv);
+            rowDiv.appendChild(gridDiv);
+        }
+        
+        document.getElementById("gamezone").appendChild(rowDiv);
+        if (i<2) {
+            $("<br>").appendTo(document.getElementById("gamezone"));
+        }
+    }
 }
 
 //resets gameGrid and gameState, clears gamezone, and calls createGame
 function resetGame(){
-	gameGrid = [[0,0,0],[0,0,0],[0,0,0]];
-	gameState = 0;
-	document.getElementById("gamezone").innerHTML = '';
-	createGame();
+    gameGrid = [[0,0,0],[0,0,0],[0,0,0]];
+    gameState = 0;
+    document.getElementById("gamezone").innerHTML = '';
+    createGame();
 }
 
 // increments game attempt counter, resets if given "reset" as argument
 function countrIncrmt(condition){
   if (condition == "reset"){
-		gameAttempts = 1;
-	}	else {
-		gameAttempts++;
-	}
-	var counters = document.getElementsByClassName("counter")
-	for (var i=0; i<counters.length; i++){
-		var count = counters[i];
-		count.innerHTML = gameAttempts;
-	}
+        gameAttempts = 1;
+    }   else {
+        gameAttempts++;
+    }
+    var counters = document.getElementsByClassName("counter")
+    for (var i=0; i<counters.length; i++){
+        var count = counters[i];
+        count.innerHTML = gameAttempts;
+    }
 }
 
 //jQuery to create game on page load and capture clicks
 $(document).ready(function(){
-	createGame();	
-	countrIncrmt();
+    createGame();   
+    countrIncrmt();
 
-	$(document).on("mousedown", ".blank", function(){
-		if ($(this).hasClass("blank")){
-			if (gameState == 0){
-				this.classList.remove("blank");
-				this.classList.add("X");
-				$(this).children("img").attr('src',xImg);
-				gameGrid[xIndex(this.id)][yIndex(this.id)] = "X";
-				gameOver();
-				if (gameState == 0) {
-					computerTurn();
-					gameOver();
-				}
-			}
-		}
-	})
-	$("#drawModal").on('hide.bs.modal', function(){
-			countrIncrmt();
-	});
-	$("#winModal").on('hide.bs.modal', function(){
-		countrIncrmt("reset");
-	});
-	$("#loseModal").on('hide.bs.modal', function(){
-		countrIncrmt();
-	});
+    $(document).on("mousedown", ".blank", function(){
+        if ($(this).hasClass("blank")){
+            if (gameState == 0){
+                this.classList.remove("blank");
+                this.classList.add("O");
+                $(this).children("img").attr('src',oImg);
+                gameGrid[xIndex(this.id)][yIndex(this.id)] = "O";
+                checkWinner();
+                if (gameState == 0) {
+                    getNextMove();
+                    checkWinner();
+                }
+            }
+        }
+    })
+    $("#drawModal").on('hide.bs.modal', function(){
+            countrIncrmt();
+    });
+    $("#winModal").on('hide.bs.modal', function(){
+        countrIncrmt("reset");
+    });
+    $("#loseModal").on('hide.bs.modal', function(){
+        countrIncrmt();
+    });
 
-	$(".btn-reset").click(function(){
-		resetGame();
-	})
+    $(".btn-reset").click(function(){
+        resetGame();
+    })
 
-	$(".btn-reset-user").click(function(){
-		countrIncrmt();
-		resetGame();
-	})
+    $(".btn-reset-user").click(function(){
+        countrIncrmt();
+        resetGame();
+    })
 });

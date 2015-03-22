@@ -5,9 +5,9 @@ var highPriBlock = [[0,"X","X"],["X",0,"X"],["X","X",0]];
 var gameState = 0;
 var gameAttempts = 0;
 
-var xImg = "imgs/cross-sm.png";
-var oImg = "imgs/circle-tick-sm.png";
-var blankImg = "imgs/blank-dark.png";
+var xImg = "static/imgs/cross-sm.png";
+var oImg = "static/imgs/circle-tick-sm.png";
+var blankImg = "static/imgs/blank-dark.png";
 
 //compares two arrays, returns true if they match
 function compare(a,b) {
@@ -26,8 +26,8 @@ function compare(a,b) {
  	return true;
 }
 
-//computer AI to decide computer move
-function computerTurn() {
+//get the next move from minimax algo in .
+function getNextMove() {
 	//checks gameGrid against passed in array
 	function arrayCheck(toCheck){
 		for (var i=0; i<3; i++){
@@ -107,7 +107,7 @@ function computerMove(i,j) {
 	gameGrid[i][j] = "O";
 	var divName = "square_"+i+"_"+j;
 	console.log(divName);
-	$("#"+divName).children("img").attr('src',oImg);
+	$("#"+divName).children("img").attr('src',xImg);
 	document.getElementById(divName).classList.remove("blank");
 	document.getElementById(divName).classList.add("O");	
 }
@@ -246,11 +246,11 @@ $(document).ready(function(){
 			if (gameState == 0){
 				this.classList.remove("blank");
 				this.classList.add("X");
-				$(this).children("img").attr('src',xImg);
+				$(this).children("img").attr('src',oImg);
 				gameGrid[xIndex(this.id)][yIndex(this.id)] = "X";
 				gameOver();
 				if (gameState == 0) {
-					computerTurn();
+					getNextMove();
 					gameOver();
 				}
 			}
