@@ -29,30 +29,18 @@
           </div>
           <div class="col-2 col-sm-2 col-lg-3 text-center">
             <div class="row">
-              <div class="col-12 col-sm-12 col-lg-12 hidden-sm" style="height: 50px; padding-top:5%;"><h4 color>Draw : <span class="drawCounter"></span> Game(s)</h4></div>
-              <div class="col-12 col-sm-12 col-lg-12 hidden-sm" style="height: 50px;"><h4 color>You Won : <span class="youCounter"></span> Game(s)</h4></div>
-              <div class="col-12 col-sm-12 col-lg-12 hidden-sm" style="height: 50px;"><h4 color>I Won : <span class="meCounter"></span> Game(s)</h4></div>
+              <div class="col-12 col-sm-12 col-lg-12 hidden-sm" style="height: 50px; padding-top:40%;"><h4 color>Draw : <span class="drawCounter"></span> Game(s)</h4></div>
+              <div class="col-12 col-sm-12 col-lg-12 hidden-sm" style="height: 50px; padding-top:15%;"><h4 color>You Won : <span class="youCounter"></span> Game(s)</h4></div>
+              <div class="col-12 col-sm-12 col-lg-12 hidden-sm" style="height: 50px; padding-top:15%;"><h4 color>I Won : <span class="meCounter"></span> Game(s)</h4></div>
 
-
-              <div class="dropdown">
-                <button class="btn btn-default dropdown-toggle" type="button" id="difficultyLevel" data-toggle="dropdown" aria-expanded="true">
-                  Level
-                  <span class="caret" style="color: steelblue;"></span>
-                </button>
-                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                  <li role="presentation">
-                    <a role="menuitem" tabindex="-1" href="#">
-                      Easy
-                    </a>
-                  </li>
-                  <li role="presentation">
-                    <a role="menuitem" tabindex="-1" href="#">
-                      Difficult
-                    </a>
-                  </li>
-                </ul>
-              </div>
-
+              <form role="form">
+                <label class="radio-inline" style="height: 50px; padding-top:15%;">
+                  <input type="radio" id="easyLev" name="level" value="easy"><b>Easy</b>
+                </label>
+                <label class="radio-inline" style="height: 50px; padding-top:15%;">
+                  <input type="radio" id="dfcltLev" name="level" value="difficult" checked=""><b>Difficult</b>
+                </label>
+              </form>
 
             </div>      
           </div>
@@ -87,7 +75,7 @@
           <div class="modal-content">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title text-center">I win this game!</h4>
+              <h4 class="modal-title text-center">I win this game! Try the easy level.</h4>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-primary btn-reset" data-dismiss="modal">Try Again</button>

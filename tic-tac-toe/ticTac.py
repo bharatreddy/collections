@@ -6,8 +6,9 @@ app = Flask(__name__)
 def starter():
     return render_template('ttt-index.html')
 
-@app.route("/next_move/<board>")
-def next_move(board=["#", "#", "#", "#", "#", "#", "#", "#", "#"]):
+@app.route("/next_move/<board>/<level>")
+def next_move(board=["#", "#", "#", "#", "#", "#", "#", "#", "#"], \
+    level="difficult"):
     # given the current board retreive the next move.
     # import the library
     import gamePerfect
@@ -15,6 +16,8 @@ def next_move(board=["#", "#", "#", "#", "#", "#", "#", "#", "#"]):
     # convert it into a list as required 
     # by the python code.
     board = board.split(",")
+    # Also get the level.
+    level = level
     # Now in our javascript code
     # the blank spaces are represented
     # by zero ('0') and in python by '#'
@@ -25,8 +28,12 @@ def next_move(board=["#", "#", "#", "#", "#", "#", "#", "#", "#"]):
     gmObj = gamePerfect.TicTacToe()
     # set the board
     gmObj.board = board
-    # return computer's step
-    step = gmObj.get_next_move('X')
+    # return computer's step based on
+    # the difficulty level chosen
+    if level == "difficult":
+        step = gmObj.get_next_move('X')
+    else:
+        step = gmObj.get_next_move_dumb('X')
     return jsonify(result=step[1])
 
 if __name__ == "__main__":

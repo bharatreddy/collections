@@ -30,9 +30,15 @@ function yIndex(squareDiv) {
 function getNextMove(){
     // get the board as array of strings
     var boardArr = gameGrid[0].concat(gameGrid[1],gameGrid[2]);
+    // Get difficulty level
+    if (document.getElementById('easyLev').checked) {
+          diffLevel = document.getElementById('easyLev').value;
+    }else{
+        diffLevel = document.getElementById('dfcltLev').value;
+    }
     // Get the new position from python script
     $(function( data ) {
-          $.getJSON("/next_move/"+boardArr.toString(), {}, function(data) {
+          $.getJSON("/next_move/"+boardArr.toString()+"/"+diffLevel, {}, function(data) {
               placeMnmxLoc(data.result);
           });
     });
