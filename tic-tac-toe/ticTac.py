@@ -26,7 +26,7 @@ def next_move(board=["#", "#", "#", "#", "#", "#", "#", "#", "#"]):
     # set the board
     gmObj.board = board
     # return computer's step
-    step = gmObj.get_next_move_dumb('X')
+    step = gmObj.get_next_move('X')
     return jsonify(result=step[1])
 
 if __name__ == "__main__":

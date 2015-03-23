@@ -4,6 +4,9 @@ var highPriWin = [[0,"X","X"],["X",0,"X"],["X","X",0]];
 var highPriBlock = [[0,"O","O"],["O",0,"O"],["O","O",0]];
 var gameState = 0;
 var gameAttempts = 0;
+var drawGames = -1;
+var youWon = -1;
+var iWon = -1;
 
 var xImg = "static/imgs/cross-sm.png";
 var oImg = "static/imgs/circle-tick-sm.png";
@@ -163,10 +166,55 @@ function countrIncrmt(condition){
     }
 }
 
+// increment drawn games counter, resets if given "reset" as argument
+function drawIncrmt(condition){
+  if (condition == "reset"){
+        drawGames = 0;
+    }   else {
+        drawGames++;
+    }
+    var counters = document.getElementsByClassName("drawCounter")
+    for (var i=0; i<counters.length; i++){
+        var count = counters[i];
+        count.innerHTML = drawGames;
+    }
+}
+
+// increment you won counter, resets if given "reset" as argument
+function youWonIncrmt(condition){
+  if (condition == "reset"){
+        youWon = 0;
+    }   else {
+        youWon++;
+    }
+    var counters = document.getElementsByClassName("meCounter")
+    for (var i=0; i<counters.length; i++){
+        var count = counters[i];
+        count.innerHTML = youWon;
+    }
+}
+
+// increment i won counter, resets if given "reset" as argument
+function iWonIncrmt(condition){
+  if (condition == "reset"){
+        iWon = 0;
+    }   else {
+        iWon++;
+    }
+    var counters = document.getElementsByClassName("youCounter")
+    for (var i=0; i<counters.length; i++){
+        var count = counters[i];
+        count.innerHTML = iWon;
+    }
+}
+
 //jQuery to create game on page load and capture clicks
 $(document).ready(function(){
     createGame();   
     countrIncrmt();
+    drawIncrmt();
+    iWonIncrmt();
+    youWonIncrmt();
 
     $(document).on("mousedown", ".blank", function(){
         if ($(this).hasClass("blank")){
@@ -185,12 +233,15 @@ $(document).ready(function(){
     })
     $("#drawModal").on('hide.bs.modal', function(){
             countrIncrmt();
+            drawIncrmt();
     });
     $("#winModal").on('hide.bs.modal', function(){
-        countrIncrmt("reset");
+        countrIncrmt();
+        iWonIncrmt();
     });
     $("#loseModal").on('hide.bs.modal', function(){
         countrIncrmt();
+        youWonIncrmt();
     });
 
     $(".btn-reset").click(function(){
